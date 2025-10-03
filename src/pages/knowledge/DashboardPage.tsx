@@ -1,4 +1,3 @@
-// src/pages/DashboardPage.tsx
 import React, { useState, useEffect } from "react";
 import { knowledgeService } from "../../api/knowledge/KnowledgeService";
 import type {
@@ -8,7 +7,6 @@ import type {
 import EntryCard from "./components/EntryCard";
 import EntryFormModal from "./components/EntryFormModal";
 
-// Mocked utility for better mobile responsiveness
 const Spinner = () => (
   <div className="flex justify-center items-center py-10">
     <div className="w-8 h-8 border-4 border-t-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -81,12 +79,11 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20 md:pb-8">
-      {" "}
       {/* Added bottom padding for mobile FAB */}
       {/* Header with Mobile-First Padding */}
       <header className="sticky top-0 z-10 bg-white shadow-sm p-4 md:p-6 flex justify-between items-center">
         <h1 className="text-2xl font-extrabold text-blue-700 tracking-tight md:text-3xl">
-          Tech Know-How Capture
+          Knowledge Capture Interface
         </h1>
 
         {/* 'Add New' button for DESKTOP */}
@@ -116,7 +113,7 @@ const DashboardPage: React.FC = () => {
           <Spinner />
         ) : (
           // Entry List - Responsive Grid Layout
-          <section
+          <ul
             className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
             role="list"
           >
@@ -134,7 +131,7 @@ const DashboardPage: React.FC = () => {
                 capturing!
               </p>
             )}
-          </section>
+          </ul>
         )}
       </main>
       {/* Floating Action Button (FAB) for MOBILE */}

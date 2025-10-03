@@ -7,7 +7,6 @@ import type {
 interface EntryFormModalProps {
   entryToEdit: KnowledgeEntry | null;
   onClose: () => void;
-  // onSave now expects the full form data, including the Base64 string for the image
   onSave: (data: KnowledgeEntryForm) => void;
 }
 
@@ -19,7 +18,6 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
   const [formData, setFormData] = useState<KnowledgeEntryForm>({
     title: "",
     description: "",
-    // imageUrl will now hold the Base64 string
     imageUrl: "",
   });
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -31,7 +29,6 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
       setFormData({
         title: entryToEdit.title,
         description: entryToEdit.description,
-        // If editing, the existing imageUrl is treated as the Base64 string
         imageUrl: entryToEdit.imageUrl || "",
       });
       setPreviewUrl(entryToEdit.imageUrl || null);
@@ -81,7 +78,6 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
       alert("Title and Description are required.");
       return;
     }
-    // Submit data with the Base64 string in the imageUrl field
     onSave(formData);
   };
 
@@ -168,7 +164,6 @@ const EntryFormModal: React.FC<EntryFormModalProps> = ({
             {previewUrl && (
               <div className="mt-4 p-2 border border-gray-300 rounded-lg">
                 <p className="text-xs text-gray-500 mb-1">Preview:</p>
-                {/* The src for the image is the Base64 string (or the temporary URL) */}
                 <img
                   src={previewUrl}
                   alt="Image Preview"
