@@ -57,7 +57,7 @@ const EntryCard: React.FC<EntryCardProps> = ({ entry, onEdit, onDelete }) => {
           </button>
           <button
             onClick={() => onDelete(entry.id)}
-            className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition active:scale-95 touch-manipulation"
+            className="px-4 py-4 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition active:scale-95 touch-manipulation"
             aria-label={`Delete ${entry.title}`}
           >
             Delete
