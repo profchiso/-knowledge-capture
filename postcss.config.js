@@ -1,7 +1,7 @@
 export default {
   plugins: {
     // CRITICAL: Ensure these plugins are listed
-    tailwindcss: {},
+    "@tailwindcss/postcss": {},
     autoprefixer: {},
   },
 };

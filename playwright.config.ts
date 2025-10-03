@@ -9,7 +9,7 @@ export default defineConfig({
   webServer: {
     command: "npm run dev", // Ensure your dev server is running
     url: "http://127.0.0.1:5173",
-    timeout: 30 * 1000,
+    timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },
   use: {
