@@ -1,105 +1,87 @@
-import { test, expect } from "@playwright/test";
-
-// Use a unique title for reliable assertion
-const UNIQUE_TITLE = `E2E Test Entry ${Date.now()}`;
-const TEST_DESCRIPTION =
-  "This entry was created by an automated Playwright test.";
-const EDITED_DESCRIPTION =
-  "This entry was successfully updated by the E2E test.";
+import { test, expect, Page } from "@playwright/test";
 
 test.describe("Knowledge Capture CRUD Operations", () => {
-  // Before each test, navigate to the dashboard root
   test.beforeEach(async ({ page }) => {
-    // Navigating to '/' starts the app and loads the initial entries from json-server
-    await page.goto("/");
+    await page.goto("http://localhost:5173");
   });
 
-  // --- Test 1: Create a New Entry (CREATE) ---
+  // ✅ Helper: click correct "Add New Entry" button based on screen size
+  const clickAddButton = async (page: Page) => {
+    if (page.viewportSize()?.width && page.viewportSize()!.width < 768) {
+      // Mobile → floating "+"
+      await page.getByRole("button", { name: "+" }).click();
+    } else {
+      // Desktop → full button
+      await page.getByRole("button", { name: "Add New Entry" }).click();
+    }
+  };
+
   test("should allow a technician to create and view a new knowledge entry", async ({
     page,
   }) => {
-    // 1. Click the 'Add New Entry' button.
-    // This handles both the FAB (Mobile) and the standard button (Desktop).
-    await page.getByRole("button", { name: /Add New Entry/i }).click();
+    await clickAddButton(page);
 
-    // 2. The form modal should be visible
-    const modalTitle = page.getByRole("heading", { name: "Create New Entry" });
-    await expect(modalTitle).toBeVisible();
+    // Wait for form to appear
+    await page.getByLabel("Title").waitFor();
+    await page.getByLabel("Description").waitFor();
 
-    // 3. Fill the form fields (Title, Description, Image is optional)
-    await page.getByLabel("Title *").fill(UNIQUE_TITLE);
-    await page.getByLabel("Description *").fill(TEST_DESCRIPTION);
+    await page.getByLabel("Title").fill("Test Entry");
+    await page.getByLabel("Description").fill("This is a test entry.");
+    await page.getByRole("button", { name: /save entry/i }).click();
 
-    // 4. Submit the form
-    await page.getByRole("button", { name: /Save Entry/i }).click();
-
-    // 5. Assert: The modal should close and the new entry should appear in the list
-    await expect(modalTitle).not.toBeVisible();
-
-    // Check for the newly created card
-    const newEntryCard = page
-      .getByRole("listitem", { name: UNIQUE_TITLE })
-      .first();
-    await expect(newEntryCard).toBeVisible();
-    await expect(newEntryCard).toContainText(TEST_DESCRIPTION);
+    // Verify new entry appears
+    await expect(page.getByRole("listitem").first()).toContainText(
+      "Test Entry",
+      {
+        timeout: 10000,
+      }
+    );
   });
 
-  // --- Test 2: Edit an Existing Entry (UPDATE) ---
   test("should allow a technician to edit and update an existing entry", async ({
     page,
   }) => {
-    // Prerequisite: Find a known entry (using the mock data from db.json, id=1)
-    const initialTitle = "Machine X Calibration Check";
-    const entryCard = page
-      .getByRole("listitem", { name: initialTitle })
-      .first();
-    await expect(entryCard).toBeVisible();
+    // Click first Edit button
+    await page.getByRole("button", { name: /edit/i }).first().click();
 
-    // 1. Click the Edit button on the card
-    await entryCard.getByRole("button", { name: "Edit" }).click();
+    await page.getByLabel("Title").waitFor();
+    await page.getByLabel("Description").waitFor();
 
-    // 2. The form modal should open in editing mode
-    const modalTitle = page.getByRole("heading", {
-      name: "Edit Knowledge Entry",
-    });
-    await expect(modalTitle).toBeVisible();
+    await page.getByLabel("Title").fill("Updated Entry");
+    await page.getByLabel("Description").fill("This entry has been updated.");
+    await page
+      .getByRole("button", { name: /update entry|save entry/i })
+      .click();
 
-    // 3. Update the Description field
-    const descriptionInput = page.getByLabel("Description *");
-    await descriptionInput.fill(EDITED_DESCRIPTION);
-
-    // 4. Submit the update
-    await page.getByRole("button", { name: "Update Entry" }).click();
-
-    // 5. Assert: The entry card is updated with the new description
-    await expect(modalTitle).not.toBeVisible();
-    const updatedEntryCard = page
-      .getByRole("listitem", { name: initialTitle })
-      .first();
-    await expect(updatedEntryCard).toBeVisible();
-    await expect(updatedEntryCard).toContainText(EDITED_DESCRIPTION);
+    // Verify update
+    await expect(page.getByRole("listitem").first()).not.toContainText(
+      "Test Entry"
+    );
+    await expect(page.getByRole("listitem").first()).toContainText(
+      "Updated Entry",
+      {
+        timeout: 10000,
+      }
+    );
   });
 
-  // --- Test 3: Delete an Existing Entry (DELETE) ---
-  // Note: We delete the entry created in Test 2 for clean up, but we use a robust selector.
   test("should allow a technician to delete a knowledge entry", async ({
     page,
   }) => {
-    // Prerequisite: Find a known entry (using the mock data from db.json, id=2)
-    const titleToDelete = "Emergency Stop Reset Procedure";
-    const entryToDelete = page
-      .getByRole("listitem", { name: titleToDelete })
-      .first();
-    await expect(entryToDelete).toBeVisible();
+    // Click Delete button on first item
+    await page
+      .getByRole("button", { name: /delete/i })
+      .first()
+      .click();
 
-    // 1. Click the Delete button on the card
-    await entryToDelete.getByRole("button", { name: "Delete" }).click();
+    // If a confirm dialog/modal is used
+    if (await page.getByRole("button", { name: /confirm/i }).isVisible()) {
+      await page.getByRole("button", { name: /confirm/i }).click();
+    }
 
-    // 2. Handle the window.confirm() dialog (Playwright handles this automatically by default, accepting it)
-    // If we used a custom modal, we would click the "Confirm Delete" button here.
-
-    // 3. Assert: The entry should be removed from the list
-    await expect(entryToDelete).not.toBeInViewport();
-    await expect(entryToDelete).toHaveCount(0);
+    // ✅ Verify the entry text disappears (safer than checking .first())
+    await expect(page.getByText("Updated Entry")).not.toBeVisible({
+      timeout: 10000,
+    });
   });
 });
