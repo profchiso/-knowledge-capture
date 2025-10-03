@@ -1,4 +1,4 @@
-# Tech Know-How Capture Dashboard (Manufacturing Interface)
+# Knowledge Capture Dashboard (Manufacturing Interface)
 
 ## Objective
 
@@ -8,12 +8,12 @@ It utilizes **React**, **TypeScript**, **Tailwind CSS** (for pixel-perfect, resp
 
 ## Deliverables Summary
 
-| Feature                 | Status    | Technology Used                                |
-| ----------------------- | --------- | ---------------------------------------------- |
-| Mobile-First UI/UX      | Complete  | Tailwind CSS, Responsive Flex/Grid             |
-| CRUD Operations         | Complete  | TypeScript, Axios, Mock API (`json-server`)    |
-| Automated E2E Testing   | Complete  | Playwright (Mobile & Desktop)                  |
-| UI/UX Bonus Improvement | Suggested | React State Management, Custom CSS Transitions |
+| Feature               | Status    | Technology Used                                |
+| --------------------- | --------- | ---------------------------------------------- |
+| Mobile-First UI/UX    | Complete  | Tailwind CSS, Responsive Flex/Grid             |
+| CRUD Operations       | Complete  | TypeScript, Axios, Mock API (`json-server`)    |
+| Automated E2E Testing | Complete  | Playwright (Mobile & Desktop)                  |
+| UI/UX Improvement     | Suggested | React State Management, Custom CSS Transitions |
 
 ## 🚀 Setup and Run Instructions
 
@@ -74,3 +74,8 @@ Ensure both the **Mock API (`npm run server`)** and the **React App (`npm run de
 2. **Clutter Reduction:** While the search bar is active (expanded), the **Floating Action Button (FAB)** for adding a new entry is hidden, preventing visual clutter and keeping the technician focused on the search task.
 
 This ensures maximum vertical screen space is preserved on mobile devices while making the search function easily accessible and highly discoverable.
+
+## Demo video link
+
+[Demo Video](https://www.awesomescreenshot.com/video/44914383?key=9c4754dcdedac19199a96159c657bbb0)
+https://www.awesomescreenshot.com/video/44914383?key=9c4754dcdedac19199a96159c657bbb0
