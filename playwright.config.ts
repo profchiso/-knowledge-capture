@@ -8,12 +8,12 @@ export default defineConfig({
   /* The URL to start the app for testing */
   webServer: {
     command: "npm run dev", // Ensure your dev server is running
-    url: "http://127.0.0.1:5173",
+    url: "http://localhost:5173/",
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },
   use: {
-    baseURL: "http://127.0.0.1:5173",
+    baseURL: "http://localhost:5173/",
     trace: "on-first-retry",
   },
   // Configure for mobile view testing (required by the assessment)
